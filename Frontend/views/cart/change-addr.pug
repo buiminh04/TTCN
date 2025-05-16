@@ -1,0 +1,83 @@
+html
+  head
+    title Địa chỉ của tôi
+    link(rel="stylesheet", href="./public/css/main.css")
+    link(rel="stylesheet", href="./public/css/responsive.css")
+    script(src="./public/js/addrForm.js")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+
+  body(class="change-address")
+    .change-address-head
+      div
+        a(href="/checkout")
+          button.fa-solid.fa-arrow-left
+        p Địa chỉ của tôi
+
+    .change-address-body
+      div
+        form(action="/user/update-address", method="POST")
+          .form-info
+            p Họ và tên
+            input(
+              type="text",
+              name="name",
+              placeholder="Họ và tên",
+              value=userAddress && userAddress.name || "",
+              required
+            )
+          .form-info
+            p Số điện thoại
+            input(
+              type="text",
+              name="phone",
+              placeholder="Số điện thoại",
+              value=userAddress && userAddress.phone || "",
+              required
+            )
+          .form-info
+            label(for="province") Tỉnh/Thành phố
+            select(id="province", name="province", required)
+              option(value="") Chọn Tỉnh/Thành phố
+          .form-info
+            label(for="district") Quận/Huyện
+            select(id="district", name="district", required)
+              option(value="") Chọn Quận/Huyện
+          .form-info
+            label(for="ward") Xã/Phường
+            select(id="ward", name="ward", required)
+              option(value="") Chọn Xã/Phường
+          .form-info
+            p Địa chỉ
+            input(
+              type="text",
+              name="address",
+              placeholder="Địa chỉ",
+              value=userAddress && userAddress.address || "",
+              required
+            )
+          .form-info
+            p Loại địa chỉ
+            .radio-group
+              div
+                input(
+                  type="radio",
+                  id="home",
+                  name="type",
+                  value="home",
+                  checked=(userAddress && userAddress.type === 'home')
+                )
+                label(for="home") Nhà riêng / Chung cư
+              div
+                input(
+                  type="radio",
+                  id="company",
+                  name="type",
+                  value="company",
+                  checked=(userAddress && userAddress.type === 'company')
+                )
+                label(for="company") Cơ quan / Công ty
+
+          .form-info
+            .btn-group
+              a.cancel(href="/checkout") Hủy
+              button.create-update(type="submit") Cập nhật

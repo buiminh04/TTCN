@@ -1,0 +1,129 @@
+html
+  head
+    title Tài khoản
+    link(rel="stylesheet", href="/main.css")
+    link(rel="stylesheet", href="/style.css")
+    link(rel="stylesheet", href="/responsive.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+  body
+    include ../header.pug
+
+    #customer-header
+      div
+        button.fa-solid.fa-arrow-left(onclick="window.location='/'")
+        p Tài khoản
+
+    #customer
+      .customer-left
+        div
+          ul
+            li: a(href="/customer") Thông tin tài khoản
+            li.active: a(href="/customer/address") Thông tin địa chỉ
+            li: a(href="/customer/change-password") Đổi mật khẩu
+            li: a(href="/customer/orders") Đơn hàng của bạn
+          button.log-out Đăng xuất
+
+      .customer-right
+        h1 Thông tin địa chỉ
+        div
+          form.customer-form(action="/customer/address/update" method="POST")
+            - const address = user?.address || {}
+            .form-info
+              p Họ và tên
+              input(type="text", name="name", placeholder="Họ và tên", value=address.fullname || '', required)
+
+            .form-info
+              p Số điện thoại
+              input(type="text", name="phone", placeholder="Số điện thoại", value=address.phone || '', required)
+
+            .form-info
+              p Quốc gia
+              input(type="text", name="country", placeholder="Quốc gia", value="Việt Nam", readonly)
+
+            .form-info
+              label(for="province") Tỉnh/Thành phố
+              select(id="province" name="city" required)
+                option(value="") Chọn Tỉnh/Thành phố
+
+            .form-info
+              label(for="district") Quận/Huyện
+              select(id="district" name="district" required disabled)
+                option(value="") Chọn Quận/Huyện
+
+            .form-info
+              label(for="ward") Xã/Phường
+              select(id="ward" name="ward" required disabled)
+                option(value="") Chọn Xã/Phường
+
+            .form-info
+              p Địa chỉ
+              input(type="text", name="address", placeholder="Địa chỉ cụ thể", value=address.address || '')
+
+            .form-info
+              p Loại địa chỉ
+              .radio-group
+                div
+                  input(type="radio", id="home", name="addressType", value="home", checked=address.type === 'home')
+                  label(for="home") Nhà riêng / Chung cư
+                div
+                  input(type="radio", id="company", name="addressType", value="company", checked=address.type === 'company')
+                  label(for="company") Cơ quan / Công ty
+
+            .form-info
+              button.create-update(type="submit") Cập nhật
+
+    include ../footer.pug
+
+    script.
+      document.addEventListener("DOMContentLoaded", function () {
+        const provinceSelect = document.getElementById("province");
+        const districtSelect = document.getElementById("district");
+        const wardSelect = document.getElementById("ward");
+
+        fetch("https://provinces.open-api.vn/api/?depth=1")
+          .then((res) => res.json())
+          .then((data) => {
+            data.forEach((province) => {
+              const opt = document.createElement("option");
+              opt.value = province.code;
+              opt.text = province.name;
+              provinceSelect.add(opt);
+            });
+          });
+
+        provinceSelect.addEventListener("change", () => {
+          const provinceCode = provinceSelect.value;
+          districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+          wardSelect.innerHTML = '<option value="">Chọn Xã/Phường</option>';
+          districtSelect.disabled = false;
+          wardSelect.disabled = true;
+
+          fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+            .then((res) => res.json())
+            .then((data) => {
+              data.districts.forEach((district) => {
+                const opt = document.createElement("option");
+                opt.value = district.code;
+                opt.text = district.name;
+                districtSelect.add(opt);
+              });
+            });
+        });
+
+        districtSelect.addEventListener("change", () => {
+          const districtCode = districtSelect.value;
+          wardSelect.innerHTML = '<option value="">Chọn Xã/Phường</option>';
+          wardSelect.disabled = false;
+
+          fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
+            .then((res) => res.json())
+            .then((data) => {
+              data.wards.forEach((ward) => {
+                const opt = document.createElement("option");
+                opt.value = ward.code;
+                opt.text = ward.name;
+                wardSelect.add(opt);
+              });
+            });
+        });
+      });

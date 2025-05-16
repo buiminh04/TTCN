@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Quản lý đơn hàng
+    link(rel='stylesheet', href='/admin.css')
+    script(src='/donhang.js')
+  body
+    header
+      h1 Quản lý đơn hàng
+    nav
+      a(href='/admin') ← Quay lại trang admin
+    main
+      table
+        thead
+          tr
+            th Mã đơn
+            th Người mua
+            th Trạng thái
+            th Thao tác
+        tbody
+          each order in orders
+            tr
+              td #{order._id}
+              td #{order.user.username}
+              td
+                select(name='status')
+                  option(value='pending', selected=order.status=='pending') Chờ xử lý
+                  option(value='shipped', selected=order.status=='shipped') Đã gửi
+                  option(value='delivered', selected=order.status=='delivered') Đã giao
+              td
+                button(data-id=order._id, class='update-order') Lưu
+                button(data-id=order._id, class='delete-order') Xóa

@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+header{
+    font-family: 'Roboto', sans-serif;
+}
+.header{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    background-color:#c12530 ;
+}
+.menu{
+    
+    align-items: center;
+    padding:20px;
+    height: 60px;
+    background-color: white;
+}
+.menu ul{
+    display: flex;
+    justify-content: space-around;
+}
+.menu ul li a:hover{
+    background-color: red;
+    color: white;
+    transition: 0.5s;
+}
+.menu ul li{
+    list-style-type: none;
+    line-height: auto;
+     
+   
+}
+.menu ul li a{
+    text-decoration: none;
+    color: black;
+    padding:21px;
+
+}
+.menu ul li img{
+    width: 90px;
+    height: auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-top:-20px;
+    
+   
+}
+.menu ul li input{
+    width: 350px;
+    height: 32px;
+    border-radius: 5px;
+    padding-top: 8px;
+    font-size: 15px;
+     
+
+}
+.menu ul li:hover i{
+    color: black;
+}
+.menu ul li i{
+    background-color: #e04852;
+    width: 70px;
+    height: 27px;
+    padding: 6px;
+    color: white;
+    font-size: 20px;
+    margin-left: -77px;
+    border-radius: 5px;
+    text-align: center;
+
+}
+.anh{
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    background-color:#f0f0f0 ;
+    padding: 20px;
+}
+
+.anh .anh1 img{
+    border-radius: 8px;
+}
+
+.anh .anh2 img{
+    border-radius: 8px;
+}
+.anhsach{
+    padding:0 20px;
+    display: flex;
+    justify-content: center;
+    background-color:#f0f0f0 ;
+
+}
+.anhsach img{
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+
+
+
+/*** silder ***/
+
+
+
+
+.silder{
+    font-family: 'Roboto', sans-serif;
+}
+ h1{
+    text-align: center;
+    font-size: 30px;
+    padding: 10px;
+
+
+}
+.banchay{
+    display: flex;
+    background: linear-gradient(to right, #c03d46, #f0f0f0);
+    border-radius: 8px;
+    margin-bottom: 50px;
+    
+}
+.banchay h1{
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    
+    padding:80px 50px;
+}
+.banchay .banchay1{
+    width: 60%;
+    text-align: center;
+    padding: 20px;
+
+}
+.banchay .banchay1 button{
+    background-color: blue;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+.banchay .banchay1 button:hover{
+    background-color: royalblue;
+    color: black;
+    cursor: pointer;
+}
+.banchay .banchay1 img{
+    width: 70%;
+    height: auto;
+    border-radius: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+h2{
+    position: relative;
+    background:linear-gradient(to right, #f9eaea, #db8b8b);
+    color: black;
+    padding:20px 0 ;
+    border-radius: 8px;
+}
+h2 i{
+    color: black;
+    position: absolute;
+    margin:0 16px;
+}
+.flash{
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(to right, #ffffff, #f3ecec);
+    padding: 20px;
+    width: 100%;
+    margin: 2px 0;
+}
+.flash img{
+    
+    width:10%;
+    margin-left: 30px;
+}
+.flash a{
+    font-size: 18px;
+    margin:0 40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/***** footer *****/
+footer{
+    width: 100%;
+    height: 300px;
+    background-color: #292929;
+    color: white;
+    border-radius: 8px;
+}
+.footer{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+
+.footer .chantrang h3{
+    font-size: 30px;
+    padding: 30px 0;
+    text-align: center;
+}
+
+
+
+.footer .chantrang ul li a{
+    text-decoration: none;
+    color: white;
+    list-style-type: none;
+    font-size: 18px;
+    padding: 14px 0;
+
+}
+.footer .chantrang ul li a:hover,
+ .footer .chantrang:hover h3{
+    color: gold;
+}

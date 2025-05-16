@@ -1,0 +1,156 @@
+doctype html
+html(lang="vi")
+  head
+    title Giỏ hàng
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/main.css")
+    link(rel="stylesheet", href="/responsive.css")
+    link(rel="stylesheet", href="/style.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+
+  body
+    include ../header.pug
+
+    div#cart-header
+      div
+        a(href="/")
+          button.fa-solid.fa-arrow-left
+        p Giỏ hàng
+      div
+        button.btn-edit Sửa
+
+    div#cart
+      div.container
+        div.cart-content
+          div.cart-left
+            h1 Giỏ hàng (#{cartItems && cartItems.length ? cartItems.length : 0} sản phẩm)
+
+            if cartItems && cartItems.length === 0
+              div.empty-order
+                i.fa-solid.fa-bag-shopping
+                p Bạn chưa có sản phẩm nào trong giỏ hàng
+                a(href="/")
+                  button Mua sắm ngay
+            else
+              div.prd-cart
+                div.prd-left
+                  input(type="checkbox", id="all", class="all-check")
+                  label(for="all") Tất cả sách
+                div.prd-right
+                  p Đơn giá
+                  p Số lượng
+                  p Thành tiền
+                  p: button.fa-solid.fa-trash
+
+              each item in cartItems
+                - const product = item.bookId || item.product || null
+                - const quantity = item.quantity || 1
+                - const bookId = (product && product._id) || item.productId || ''
+                - const image = (product && product.image) || item.image || '/default.jpg'
+                - const title = (product && product.title) || item.title || 'Không rõ'
+                - const price = (product && product.price) || item.price || 0
+                - const totalPrice = price * quantity
+                div.prd
+                  div.prd-left
+                    input(type="checkbox", class="book-check", name="book", value=bookId)
+                    label(for="book")
+                      div
+                        img(src=image, alt="Ảnh")
+                      div.prd-info
+                        h2= title
+                        p Cung cấp bởi
+                          span= (product && product.provider) ? product.provider : 'Không rõ'
+                        p Tồn kho #{product && product.stock ? product.stock : 'N/A'} cuốn
+                        div
+                          p #{price.toLocaleString()} đ
+                          div
+                            button.fa-solid.fa-chevron-up
+                            p= quantity
+                            button.fa-solid.fa-chevron-down
+                  div.prd-right
+                    p #{price.toLocaleString()} đ
+                    p
+                      button.fa-solid.fa-chevron-up
+                      | #{quantity}
+                      button.fa-solid.fa-chevron-down
+                    p #{totalPrice.toLocaleString()} đ
+                    p: button.fa-solid.fa-trash
+
+          div.cart-right
+            div.cart-checkout
+              div
+                input(type="checkbox", class="all-check")
+                label(for="all") Chọn tất cả (#{cartItems.length})
+                button Xóa
+              div
+                p Tổng cộng (#{cartItems.length} sản phẩm):
+                  span #{(total || 0).toLocaleString()} đ
+                a(href="/checkout")
+                  button Thanh toán
+
+            div.cart-edit.hidden
+              div
+                input(type="checkbox", class="all-check")
+                label(for="all") Chọn tất cả (#{cartItems.length})
+              div
+                button Xóa
+
+    include ../footer.pug
+
+    script.
+      document.addEventListener("DOMContentLoaded", () => {
+        // Tăng số lượng
+        document.querySelectorAll(".fa-chevron-up").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const parent = btn.closest(".prd");
+            const id = parent.querySelector("input.book-check").value;
+            await fetch(`/cart/increase/${id}`, { method: "POST" });
+            location.reload();
+          });
+        });
+
+        // Giảm số lượng
+        document.querySelectorAll(".fa-chevron-down").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const parent = btn.closest(".prd");
+            const id = parent.querySelector("input.book-check").value;
+            await fetch(`/cart/decrease/${id}`, { method: "POST" });
+            location.reload();
+          });
+        });
+
+        // Xóa sản phẩm
+        document.querySelectorAll(".fa-trash").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const parent = btn.closest(".prd");
+            const id = parent.querySelector("input.book-check").value;
+            await fetch(`/cart/remove/${id}`, { method: "POST" });
+            location.reload();
+          });
+        });
+
+        // Toggle chế độ sửa
+        const editBtn = document.querySelector('.btn-edit');
+        const cartCheckout = document.querySelector('.cart-checkout');
+        const cartEdit = document.querySelector('.cart-edit');
+
+        if (editBtn && cartCheckout && cartEdit) {
+          editBtn.addEventListener('click', () => {
+            const isEdit = editBtn.textContent.trim() === 'Sửa';
+            editBtn.textContent = isEdit ? 'Hoàn thành' : 'Sửa';
+            cartCheckout.classList.toggle('hidden', isEdit);
+            cartEdit.classList.toggle('hidden', !isEdit);
+          });
+        }
+
+        // Checkbox "Chọn tất cả"
+        const allCheckboxes = document.querySelectorAll(".all-check");
+        const bookCheckboxes = document.querySelectorAll(".book-check");
+
+        allCheckboxes.forEach(allCb => {
+          allCb.addEventListener("change", () => {
+            bookCheckboxes.forEach(cb => cb.checked = allCb.checked);
+          });
+        });
+      });

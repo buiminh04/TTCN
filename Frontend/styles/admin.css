@@ -1,0 +1,191 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+header{
+    background-color: rgb(53, 52, 52);
+}
+.content{
+    font-family: Arial sans-serif;    
+}
+.content .logo{
+    width:100%;
+    height: 60px;
+    line-height: 60px;
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(39, 38, 38);
+}
+.content .logo li{
+    color: aliceblue;
+    list-style-type: none;
+}
+.content .logo li a{
+    color: aliceblue;
+    text-decoration: none;
+    padding:22px 0 ;
+
+}
+.content .logo li a i {
+    font-size: 14px;
+    color: crimson;
+}
+.content .logo li a:hover{
+    background-color: darkgrey;
+    color: black;
+    
+}
+
+
+
+
+.content .quanli{
+    width: 230px;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    flex-direction: column; 
+    background-color: rgb(53, 52, 52);
+    
+}
+    
+
+.content .quanli li{
+    
+    padding: 50px 0;
+    font-family: arial, sans-serif;
+    display: inline-block;
+    position: relative;
+
+
+
+}
+.content .quanli li a {
+    
+    text-decoration: none;
+    color: aliceblue;
+    list-style-type: none;
+
+}
+.content .quanli li a  h5{
+    text-align: center;
+    line-height: 60px;
+    position: relative; 
+    background-color: rgb(53, 52, 52);
+
+}
+.content .quanli li a i {
+    color: rgb(6, 132, 243);
+    position: absolute;
+    line-height: 70px;
+    left: 105px;
+    padding-bottom: 30px;
+    
+
+
+}
+.content .quanli li a  h5:hover{
+    background-color:  darkgrey;
+    color: black;
+    border-top-left-radius:45%;
+    border-bottom-left-radius:45%;
+}
+
+
+
+
+
+.main{
+    margin-left: 230px;
+    padding: 20px;
+    background-color: rgb(224, 224, 224);
+    height: 100vh;
+    
+}
+.main .content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.content .admin{  
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    
+    
+  
+}
+.content .timkiem {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    font-size: 2px;
+}
+.content .timkiem input {
+    width: 70%;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 20px;
+    font-size: 20px;
+    border-radius: 5px;
+} 
+.content .timkiem i{
+    font-size: 20px;
+    position: absolute; 
+    top: 95px;
+    right: 170px;
+}
+
+
+
+
+.danhsach{
+    width: 100%;
+    height: 70%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    background-color: rgb(224, 224, 224);
+    
+}
+.danhsachthongtin{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+.danhsachthongtin .thongtin{
+    width: 100%;
+    height: 60%;
+    text-align: center;
+    
+
+   
+
+
+}
+.danhsachthongtin .thongtin tr th{
+    background-color: royalblue;
+    border-radius: 10px;
+}
+.danhsachthongtin .thongtin tr td{ 
+    text-align: center;
+    padding: 10px;
+    
+}
+    
+
+.danhsach .btn{
+    width:auto;
+    height: 70px;
+    line-height: 100px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}

@@ -1,0 +1,50 @@
+doctype html
+html(lang="vi")
+  head
+    title Tài khoản
+    link(rel="stylesheet", href="/main.css")
+    link(rel="stylesheet", href="/style.css")
+    link(rel="stylesheet", href="/responsive.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+
+  body
+    include ../header.pug 
+
+    #customer
+      .customer-left
+        div
+          ul
+            li.active: a(href="/customer") Thông tin tài khoản
+            li: a(href="/customer/address") Thông tin địa chỉ
+            li: a(href="/customer/change-password") Đổi mật khẩu
+            li: a(href="/customer/orders") Đơn hàng của bạn
+          button.log-out(onclick="window.location='/auth/logout'") Đăng xuất
+
+      .customer-right
+        - const name = user?.fullname || ''
+        - const phone = user?.phone || ''
+        - const email = user?.email || ''
+        - const birthday = user?.birthday || ''
+
+        h1 Thông tin tài khoản       
+        div
+          form.customer-form(action="/customer/update" method="POST")
+            .form-info
+              p Họ và tên                   
+              input(type="text", name="fullname", placeholder="Họ và tên", value=name, required)
+
+            .form-info
+              p Số điện thoại
+              input(type="text", name="phone", placeholder="Số điện thoại", value=phone, required)
+
+            .form-info
+              p Email
+              input(type="email", name="email", placeholder="Email", value=email)
+
+            .form-info
+              p Ngày sinh
+              input(type="date", name="birthday", value=birthday)
+
+            .form-info           
+              button.create-update(type="submit") Cập nhật 
+    include ../footer.pug

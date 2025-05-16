@@ -1,0 +1,172 @@
+doctype html
+html(lang="vi")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= book.title
+    link(rel="stylesheet", href="/main.css")
+    link(rel="stylesheet", href="/style.css")
+    link(rel="stylesheet", href="/responsive.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+
+  body
+    include ./header.pug
+
+    main.container#product-page
+      .product-wrapper
+        .product-image
+          img(src=book.image || '/default.jpg', alt=book.title)
+
+        .product-details
+          h1= book.title
+          p
+            i.fa-solid.fa-star(style="color: gold")
+            | #{averageRating || 'Chưa có đánh giá'} / 5 (#{reviews.length || 0} đánh giá)
+          p
+            strong Tác giả:
+            |  #{book.author || 'Chưa rõ'}
+          p
+            strong Nhà xuất bản:
+            |  #{book.publisher || 'Chưa rõ'}
+          p
+            strong Năm xuất bản:
+            |  #{book.year || '---'}
+          p
+            strong Thể loại:
+            |  #{book.category || '---'}
+          p
+            strong Giá:
+            span.price #{book.price.toLocaleString()} đ
+          p
+            strong Số lượng trong kho:
+            |  #{book.stock}
+          p
+            strong Đã bán:
+            |  #{book.sold || 0}
+          p
+            strong Mô tả:
+            |  #{book.description || 'Không có mô tả'}
+
+          .cart-actions
+            button(class="btn" onclick=`addToCart('${book._id}')`) Thêm vào giỏ hàng
+            a(href="/cart")
+              button(type="button" class="btn") Mua ngay
+          div#cart-message(style="display: none; padding: 10px; background: #4caf50; color: white; margin-top: 10px; position: fixed; top: 10px; right: 10px;")
+
+      // Đánh giá
+      if user
+        section.review-form
+          h2 Đánh giá sản phẩm
+          form(id="review-form")
+            div
+              label(for="rating") Đánh giá sao:
+              select(name="rating", required)
+                option(value="") -- Chọn số sao --
+                each i in [5,4,3,2,1]
+                  option(value=i)= `${i} sao`
+            div
+              label(for="comment") Bình luận:
+              textarea(name="comment", rows="3", placeholder="Viết cảm nhận của bạn." required)
+            input(type="hidden", name="bookId", value=book._id)
+            button.btn(type="submit") Gửi đánh giá
+          div#review-message(style="color: green; margin-top: 10px")
+      else
+        p(style="margin-top: 20px") Vui lòng đăng nhập để đánh giá sản phẩm.
+
+      if reviews && reviews.length
+        section.review-list
+          h2 Đánh giá người dùng
+          each review in reviews
+            .review
+              strong= (review.user && review.user.username) ? review.user.username : 'Ẩn danh'
+              span= '⭐'.repeat(review.rating)
+              p= review.comment
+
+    include ./footer.pug
+
+    script.
+      document.addEventListener("DOMContentLoaded", () => {
+        const reviewForm = document.getElementById("review-form");
+        const reviewMessage = document.getElementById("review-message");
+        const cartMessage = document.getElementById("cart-message");
+
+        // Gửi đánh giá
+        reviewForm?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(reviewForm);
+          const rating = formData.get("rating");
+          const comment = formData.get("comment");
+          const bookId = formData.get("bookId");
+
+          try {
+            const res = await fetch(`/books/${bookId}/review`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ rating, comment }),
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+              reviewMessage.textContent = "Đánh giá của bạn đã được ghi nhận.";
+              reviewMessage.style.color = "green";
+
+              // Thêm đánh giá mới vào danh sách ngay lập tức
+              const reviewList = document.querySelector(".review-list");
+              const newReview = document.createElement("div");
+              newReview.className = "review";
+              newReview.innerHTML = `
+                <strong>${data.user?.username || "Ẩn danh"}</strong>
+                <span>${"⭐".repeat(rating)}</span>
+                <p>${comment}</p>
+              `;
+              reviewList.prepend(newReview);
+
+              reviewForm.reset();
+            } else {
+              reviewMessage.textContent = data.message || "Gửi đánh giá thất bại.";
+              reviewMessage.style.color = "red";
+            }
+          } catch (err) {
+            reviewMessage.textContent = "Lỗi khi gửi đánh giá.";
+            reviewMessage.style.color = "red";
+          }
+        });
+
+        // Thêm vào giỏ hàng
+        window.addToCart = async (bookId) => {
+          try {
+            const res = await fetch(`/cart/add/${bookId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ quantity: 1 }),
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+              cartMessage.textContent = data.message || "Đã thêm vào giỏ hàng!";
+              cartMessage.style.display = "block";
+              setTimeout(() => {
+                cartMessage.style.display = "none";
+              }, 3000);
+            } else {
+              cartMessage.textContent = data.message || "Thêm vào giỏ hàng thất bại.";
+              cartMessage.style.display = "block";
+              cartMessage.style.background = "red";
+              setTimeout(() => {
+                cartMessage.style.display = "none";
+              }, 3000);
+            }
+          } catch (err) {
+            cartMessage.textContent = "Lỗi khi thêm vào giỏ hàng.";
+            cartMessage.style.display = "block";
+            cartMessage.style.background = "red";
+            setTimeout(() => {
+              cartMessage.style.display = "none";
+            }, 3000);
+          }
+        };
+      });

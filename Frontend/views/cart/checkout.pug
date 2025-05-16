@@ -1,0 +1,161 @@
+doctype html
+html(lang="vi")
+  head
+    title Thanh toán
+    link(rel="stylesheet", href="/main.css")
+    link(rel="stylesheet", href="/style.css")
+    link(rel="stylesheet", href="/responsive.css")
+    script(src="/public/js/addrForm.js")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+  body
+    include ../header.pug
+
+    #checkout-header
+      button.fa-solid.fa-arrow-left(onclick="window.history.back()" aria-label="Quay lại")
+      p Thanh toán
+
+    #checkout
+      .container
+        //- Địa chỉ giao hàng
+        .info
+          .info-head
+            i.fa-solid.fa-location-dot
+            p Địa chỉ giao hàng
+          if userAddress
+            .info-user
+              div
+                p= userAddress && userAddress.fullname ? userAddress.fullname : ((userAddress && userAddress.firstname) + ' ' + (userAddress && userAddress.lastname))
+                p= userAddress && userAddress.phone || 'Số điện thoại không xác định'
+              p= userAddress && userAddress.address || 'Địa chỉ không xác định'
+              button.info-change(type="button") Thay đổi
+          else
+            p Bạn chưa có địa chỉ giao hàng
+            button.info-change(type="button") Thêm địa chỉ
+          button.fa-solid.fa-chevron-right(type="button" onclick="window.location='/change-address'")
+
+        //- FORM đặt hàng
+        form(action="/orders/create" method="POST")
+          input(type="hidden", name="paymentMethod", value="cod")
+
+          //- Danh sách sản phẩm
+          .prd-checkout
+            .prd-left
+              h2 Sản phẩm
+            .prd-right
+              p Đơn giá
+              p Số lượng
+              p Thành tiền
+
+          each item, index in cart || []
+            .prd
+              div
+                - const imageSrc = item.book && item.book.image ? item.book.image : '/default.jpg'
+                img(src=imageSrc, alt="Ảnh sản phẩm")
+                .prd-info
+                  h2= item.book && item.book.title ? item.book.title : 'Sản phẩm không xác định'
+                  div
+                    p #{item.price.toLocaleString()} đ
+                    p x#{item.quantity}
+              .prd-sum
+                p Tổng tiền
+                p #{(item.price * item.quantity).toLocaleString()} đ
+              div
+                p #{item.price.toLocaleString()} đ
+                p #{item.quantity}
+                p #{(item.price * item.quantity).toLocaleString()} đ
+
+          //- Phương thức thanh toán
+          .payment-method
+            h2 Phương thức thanh toán
+            input(type="radio", id="payment-cod", name="paymentMethod", value="cod", required checked)
+            label(for="payment-cod")
+              i.fa-solid.fa-money-bill-wave
+              | Thanh toán khi nhận hàng
+
+          //- Ghi chú
+          .note-checkout
+            h2 Thông tin khác
+            label(for="note") Ghi chú
+              span *
+            textarea.form-note(name="note", required)
+
+          //- Tổng tiền & nút đặt hàng
+          .pay
+            .pay-med
+              h2 Phương thức thanh toán
+              p Thanh toán khi nhận hàng
+            div
+              .paym
+                p Tổng tiền
+                p #{total.toLocaleString()} đ
+              p Đã bao gồm thuế
+
+              input(type="hidden", name="totalPrice", value=total)
+              each item, index in cart
+                input(type="hidden", name=`items[${index}][book]`, value=item.book._id)
+                input(type="hidden", name=`items[${index}][quantity]`, value=item.quantity)
+                input(type="hidden", name=`items[${index}][price]`, value=item.price)
+              button(type="submit") Đặt hàng
+
+    //- Form đổi địa chỉ (ẩn mặc định)
+    .change-addr
+      div
+        form(action="/user/update-address" method="POST")
+          .form-info
+            p Họ và tên
+            input(type="text", name="fullname", placeholder="Họ và tên", value=(userAddress && userAddress.fullname) || "", required)
+          .form-info
+            p Số điện thoại
+            input(type="text", name="phone", placeholder="Số điện thoại", value=(userAddress && userAddress.phone) || "", required)
+          .form-info
+            label(for="province") Tỉnh/Thành phố
+            select(id="province", name="province", required)
+              option(value="") Chọn Tỉnh/Thành phố
+          .form-info
+            label(for="district") Quận/Huyện
+            select(id="district", name="district", required)
+              option(value="") Chọn Quận/Huyện
+          .form-info
+            label(for="ward") Xã/Phường
+            select(id="ward", name="ward", required)
+              option(value="") Chọn Xã/Phường
+          .form-info
+            p Địa chỉ
+            input(type="text", name="address", placeholder="Địa chỉ", value=(userAddress && userAddress.address) || "", required)
+          .form-info
+            p Loại địa chỉ
+            .radio-group
+              div
+                input(type="radio", id="home", name="type", value="home", checked=(userAddress && userAddress.type === 'home'))
+                label(for="home") Nhà riêng / Chung cư
+              div
+                input(type="radio", id="company", name="type", value="company", checked=(userAddress && userAddress.type === 'company'))
+                label(for="company") Cơ quan / Công ty
+          .form-info
+            .btn-group
+              button.cancel(type="button") Hủy
+              button.create-update(type="submit") Cập nhật
+
+    include ../footer.pug
+
+    script.
+      const changeBtn = document.querySelector(".info-change");
+      const changeAdd = document.querySelector(".change-addr");
+      const cancelBtn = document.querySelector(".cancel");
+      const form = document.querySelector("form[action='/user/update-address']");
+
+      changeBtn?.addEventListener("click", () => changeAdd.classList.add("open"));
+      cancelBtn?.addEventListener("click", () => changeAdd.classList.remove("open"));
+      form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+        });
+        if (response.ok) {
+          changeAdd.classList.remove("open");
+          window.location.reload();
+        } else {
+          alert("Cập nhật địa chỉ thất bại. Vui lòng thử lại.");
+        }
+      });

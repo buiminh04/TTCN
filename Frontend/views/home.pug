@@ -1,0 +1,123 @@
+doctype html
+html(lang="vi")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Trang chủ
+    link(rel="stylesheet", href="/home.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css")
+
+  body
+    header
+      .header
+        img(src="/anh/download1.webp", alt="Logo")
+      .menu
+        ul
+          li
+            img(src="/anh/anh-mo-ta.jpg", alt="logo")
+          li
+            a(href="/") TRANG CHỦ
+          li
+            a(href="/products") SẢN PHẨM
+          li
+            input(type="text", placeholder="Tìm kiếm sản phẩm")
+            i.fa-solid.fa-magnifying-glass
+
+          if user && user.role === 'admin'
+            li
+              a(href="/admin") ADMIN
+
+          if user
+            li
+              a(href="/customer") #{user.username}
+            li
+              a(href="/auth/logout") Đăng xuất
+          else
+            li
+              a(href="/auth/login") Đăng nhập
+
+          li
+            a(href="/cart") Giỏ hàng
+
+    main
+      .slider
+        h1 WEB BÁN SÁCH-TRUYỆN NHÓM 9
+
+        .banchay
+          h1 Sản phẩm bán chạy
+          each book in banChay
+            .banchay1
+              a(href=`/books/${book._id}`)
+                img(src=book.image, alt=book.title)
+              a(href=`/books/${book._id}`)
+                h3= book.title
+              p Giá: #{book.price.toLocaleString()} đ
+              button.add-to-cart(type="button", data-id=book._id) Thêm vào giỏ hàng
+
+        .banchay
+          h1 Manga
+          each book in manga
+            .banchay1
+              a(href=`/books/${book._id}`)
+                img(src=book.image, alt=book.title)
+              a(href=`/books/${book._id}`)
+                h3= book.title
+              p Giá: #{book.price.toLocaleString()} đ
+              button.add-to-cart(type="button", data-id=book._id) Thêm vào giỏ hàng
+
+        .banchay
+          h1 Combo sách
+          each book in comboSach
+            .banchay1
+              a(href=`/books/${book._id}`)
+                img(src=book.image, alt=book.title)
+              a(href=`/books/${book._id}`)
+                h3= book.title
+              p Giá: #{book.price.toLocaleString()} đ
+              button.add-to-cart(type="button", data-id=book._id) Thêm vào giỏ hàng
+
+    footer
+      .footer
+        h1 WEB BÁN SÁCH-TRUYỆN NHÓM 9
+        .chantrang
+          h3 Dịch vụ
+          ul
+            li: a(href="/about") Giới thiệu
+            li: a(href="/contact") Liên hệ
+            li: a(href="#") Hướng dẫn mua hàng
+            li: a(href="#") Chính sách bảo mật
+            li: a(href="#") Chính sách đổi trả
+            li: a(href="#") Chính sách vận chuyển
+        .chantrang
+          h3 Hỗ trợ khách hàng
+          ul
+            li: a(href="#") Hướng dẫn mua hàng
+            li: a(href="#") Hướng dẫn thanh toán
+            li: a(href="#") Hướng dẫn đổi trả
+            li: a(href="#") Hướng dẫn bảo hành
+            li: a(href="#") Hướng dẫn sử dụng
+
+    script.
+      document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', async () => {
+          const bookId = button.getAttribute('data-id');
+          try {
+            const response = await fetch(`/cart/add/${bookId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+              alert('Đã thêm sản phẩm vào giỏ hàng!');
+            } else if (response.status === 401) {
+              alert('Vui lòng đăng nhập để thêm vào giỏ hàng.');
+              window.location.href = '/auth/login';
+            } else {
+              alert('Thêm vào giỏ hàng thất bại.');
+            }
+          } catch (err) {
+            alert('Lỗi khi thêm vào giỏ hàng.');
+            console.error(err);
+          }
+        });
+      });

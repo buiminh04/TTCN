@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Doanh thu
+    link(rel='stylesheet', href='/admin.css')
+    script(src='sale.js')
+  body
+    header
+      h1 Báo cáo doanh thu
+    nav
+      a(href='/admin') ← Quay lại trang admin
+    main
+      h2 Doanh thu theo tháng
+      table
+        thead
+          tr
+            th Tháng
+            th Sách bán
+            th Tổng doanh thu
+        tbody
+          each item in sales
+            tr
+              td #{item.month}
+              td #{item.totalSold}
+              td #{item.totalRevenue} đ

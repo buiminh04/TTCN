@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Trang quản trị admin
+    link(rel='stylesheet', href='admin.css')
+    script(src='admin.js')
+  body
+    header
+      h1 Trang quản trị
+    nav
+      ul
+        li: a(href='/admin/user') Quản lý người dùng
+        li: a(href='/admin/book') Quản lý sách
+        li: a(href='/admin/order') Quản lý đơn hàng
+        li: a(href='/admin/sale') Báo cáo doanh thu
+        li: a(href='/auth/logout') Đăng xuất
+    main
+      h2 Chào mừng đến với trang quản trị
+      p Chọn một mục bên trái để quản lý hệ thống.

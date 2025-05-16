@@ -1,0 +1,81 @@
+header {
+  background: linear-gradient(135deg, #918e8f, #181718);
+  padding: 15px 20px; /* Khoảng cách bên trong header */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Bóng cho header */
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px; /* Chiều rộng tối đa cho container */
+  margin: 0 auto; /* Căn giữa container */
+}
+
+.content__header {
+  display: flex;
+  align-items: center;
+}
+
+.logo__header img {
+  width: 80px; /* Chiều rộng logo */
+  height: auto; /* Chiều cao tự động */
+  margin-right: 50px; /* Khoảng cách giữa logo và menu */
+}
+
+.menu__header nav ul {
+  display: flex;
+  list-style-type: none; /* Xóa dấu chấm */
+  padding: 0;
+  margin: 0;
+}
+
+.menu__header nav ul li {
+  margin: 0 15px; /* Khoảng cách giữa các mục menu */
+}
+
+.menu__header nav ul li a {
+  /*chữchữ*/
+  text-decoration: none; /* Xóa gạch chân */
+  color: white;
+  font-size: 16px;
+  padding: 10px 15px; /* Khoảng cách bên trong liên kết */
+  border-radius: 5px; /* Bo tròn góc cho liên kết */
+  transition: background 0.3s; /* Thêm hiệu ứng chuyển tiếp */
+}
+
+.menu__header nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Màu nền hover */
+}
+
+.card__head {
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.card {
+  position: relative; /* Vị trí tương đối cho icon giỏ hàng */
+  margin-left: 20px; /* Khoảng cách giữa user icon và giỏ hàng */
+}
+
+.card i {
+  width: 35px;
+  font-size: 25px;
+  height: auto;
+  color: #fff;
+  cursor: pointer;
+}
+
+.card__head > a i {
+  font-size: 25px;
+  color: #fff;
+}
+
+#cart-count {
+  position: absolute; /* Vị trí tuyệt đối cho số lượng trong giỏ hàng */
+  top: -5px; /* Đặt ở phía trên cùng bên trái */
+  right: -5px; /* Đặt ở phía bên phải */
+  background: #ff1493; /* Màu nền cho số lượng */
+  color: white;
+  border-radius: 50%; /* Bo tròn */
+  padding: 2px 5px; /* Khoảng cách bên trong */
+  font-size: 11px; /* Kích thước chữ */
+}

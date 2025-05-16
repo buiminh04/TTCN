@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Quản lý khách hàng
+    link(rel='stylesheet', href='/admin.css')
+    script(src='book.js')
+  body
+    header
+      h1 Quản lý người dùng
+    nav
+      a(href='/admin') ← Quay lại trang admin
+    main
+      table
+        thead
+          tr
+            th Tên người dùng
+            th Email
+            th Quyền
+            th Thao tác
+        tbody
+          each user in users
+            tr
+              td #{user.username}
+              td #{user.email}
+              td
+                select(name='role')
+                  option(value='user', selected=user.role=='user') Người dùng
+                  option(value='admin', selected=user.role=='admin') Quản trị
+              td
+                button(data-id=user._id, class='save-role') Lưu
+                button(data-id=user._id, class='delete-user') Xóa

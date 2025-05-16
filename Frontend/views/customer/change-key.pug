@@ -1,0 +1,35 @@
+doctype html
+html
+  head
+    title Đổi mật khẩu
+    link(rel="stylesheet", href="/main.css")
+    link(rel="stylesheet", href="/style.css")
+    link(rel="stylesheet", href="/responsive.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css")
+  body
+    include ../header.pug
+
+    #customer
+      .customer-left
+        ul
+          li: a(href="/customer") Thông tin tài khoản
+          li: a(href="/customer/address") Thông tin địa chỉ
+          li: a(href="/customer/change-password") Đổi mật khẩu
+          li: a(href="/customer/orders") Đơn hàng của bạn
+        a.log-out(href="/auth/logout") Đăng xuất
+      .customer-right
+        h1 Đổi mật khẩu
+        form.customer-form(action="/customer/change-password" method="POST")
+          .form-info
+            p Mật khẩu hiện tại
+            input(type="password", name="oldPassword", placeholder="Nhập mật khẩu cũ", required)
+          .form-info
+            p Mật khẩu mới
+            input(type="password", name="newPassword", placeholder="Nhập mật khẩu mới", required)
+          .form-info
+            p Nhập lại mật khẩu mới
+            input(type="password", name="confirmPassword", placeholder="Nhập lại mật khẩu", required)
+          .form-info
+            button.create-update(type="submit") Cập nhật
+
+    include ../footer.pug
